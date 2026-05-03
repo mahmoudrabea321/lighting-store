@@ -1,10 +1,27 @@
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 export default function Hero() {
+  const [isOn, setIsOn] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsOn((prev) => !prev);
+    }, 2500); // Toggles automatically every 2.5 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="relative h-screen bg-bg overflow-hidden pt-20">
-      <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-gold opacity-[0.08] blur-[120px] rounded-full"></div>
+      <motion.div 
+        animate={{ 
+          opacity: isOn ? 0.15 : 0,
+          scale: isOn ? 1 : 0.8
+        }}
+        transition={{ duration: isOn ? 0.4 : 1.5 }}
+        className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-gold blur-[120px] rounded-full pointer-events-none"
+      ></motion.div>
       
       <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-0 h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="col-span-6 flex flex-col justify-center">
@@ -48,10 +65,23 @@ export default function Hero() {
         </div>
 
         <div className="hidden md:flex col-span-6 items-center justify-center relative">
-          <img 
-            src="https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&q=80&w=2000" 
-            alt="Luxury Chandelier" 
-            className="w-[400px] h-[500px] object-cover opacity-80"
+          <motion.img 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ 
+              opacity: isOn ? 1 : 0.2, 
+              scale: 1,
+              filter: isOn 
+                ? 'brightness(1.2) contrast(1.1) drop-shadow(0px 0px 40px rgba(212,175,55,0.4))' 
+                : 'brightness(0.5) contrast(1) drop-shadow(0px 0px 0px rgba(212,175,55,0))'
+            }}
+            transition={{ 
+              duration: isOn ? 0.3 : 1.2, 
+              delay: isOn ? 0 : 0.2,
+              ease: "easeInOut" 
+            }}
+            src="https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&q=80&w=1000" 
+            alt="Minimalist Edison Bulb" 
+            className="w-[400px] h-[550px] object-cover mix-blend-screen rounded-sm"
           />
         </div>
       </div>
